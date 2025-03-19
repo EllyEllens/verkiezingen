@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verkiezingen - Stemmen</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url("{{ url_for('static', filename='images/suri.webp') }}");
+            background-size: cover;
+            background-position: center;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);  
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #CE1126;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-around;
+            width: 200px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #177245;
+            font-weight: bold;
+            margin-left: 15px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #CE1126;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            display: none;
+            margin-top: 50px; /* Spacing from header */
+        }
+
+        h1 {
+            color: #333;
+            font-size: 32px;
+            margin-bottom: 30px;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .candidate-list {
+            margin-bottom: 20px;
+        }
+
+        .candidate-list label {
+            display: block;
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 12px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .candidate-list label:hover {
+            background-color: #e2e6ea;
+        }
+
+        input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        button {
+            padding: 12px 25px;
+            background-color: #177245;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button:hover {
+            background-color: #28a745;
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        /* Modal style */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-content p {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="{{ url_for('home') }}" class="logo">
+            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Stem App Logo">
+            Verkiezingen.2025
+        </a>
+        <div class="nav-links">
+            <a href="{{ url_for('results') }}">Bekijk Resultaten</a>
+        </div>
+    </div>
+
+    <div class="container" id="voting-container">
+        <h1>Stemmen</h1>
+        <form method="POST">
+            <div class="candidate-list">
+                {% for candidate in candidates %}
+                    <label>
+                        <input type="radio" name="candidate" value="{{ candidate.id }}" required>
+                        <span>{{ candidate.candidate_name }} ({{ candidate.party_name }})</span>
+                    </label>
+                {% endfor %}
+            </div>
+            <button type="submit">Stemmen</button>
+        </form>
+        <a href="{{ url_for('home') }}">Terug naar Home</a>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Het stemmen is alleen mogelijk van maandag tot en met vrijdag, tussen 08:00 en 18:00 uur.</p>
+        </div>
+    </div>
+
+    <script>
+        // Huidige datum en tijd verkrijgen
+        const now = new Date();
+        const dayOfWeek = now.getDay(); // Maandag = 1, Zondag = 0
+        const hour = now.getHours(); // Huidige uur
+    
+        // Controleer of het tussen 08:00 en 18:00 is van maandag tot en met vrijdag
+        if (dayOfWeek >= 1 && dayOfWeek <= 5 && hour >= 8 && hour < 18) {
+            // Het stemmen is toegestaan
+            document.getElementById("voting-container").style.display = "block";
+        } else {
+            // Het stemmen is gesloten, toon modaal bericht
+            document.getElementById("myModal").style.display = "flex";
+        }
+    
+        // Sluit de modal en breng de gebruiker naar de homepagina als de gebruiker op het sluitpictogram klikt
+        document.querySelector(".close").onclick = function() {
+            window.location.href = "{{ url_for('home') }}";  // Verwijs naar de homepagina
+        }
+    
+        // Sluit de modal als de gebruiker buiten de modal klikt
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("myModal")) {
+                window.location.href = "{{ url_for('home') }}";  // Verwijs naar de homepagina
+            }
+        }
+    </script>
+    
+</body>
+</html>

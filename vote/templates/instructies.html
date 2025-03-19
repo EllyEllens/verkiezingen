@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/icon.png') }}">
+    <title>Verkiezingen - Instructies</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url("{{ url_for('static', filename='images/back.jpg') }}") no-repeat center center fixed;
+            background-size: cover; 
+            color: #fff;
+            text-align: center;
+            height: 100vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #CE1126;
+        }
+
+        .logo img {
+            height: 40px; 
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-around;
+            width: 200px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #177245;
+            font-weight: bold;
+            margin-left: 15px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #CE1126;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            margin-top: 80px; /* Voorkomt overlap met de header */
+        }
+
+        h1 {
+            color: #333;
+            font-size: 26px;
+        }
+
+        p {
+            color: #555;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="{{ url_for('home') }}" class="logo">
+            <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Stem App Logo">
+            Verkiezingen.2025
+        </a>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Hoe gebruik je deze website?</h1>
+        <p>✅ Druk op de knop <strong>Inloggen</strong>.</p>
+        <p>✅ Log in met je ID-kaartnummer en stemcode.</p>
+        <p>✅ Breng je stem uit op de gewenste kandidaat.</p>
+        <p>✅ Bekijk de resultaten zodra de stemming is afgelopen.</p>
+        <p>✅ De website is geldig van maandag tot en met vrijdag van 08:00 u - 18:00 u .</p>
+    </div>
+</body>
+</html>

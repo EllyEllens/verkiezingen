@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splash Screen</title>
+    <style>
+        /* Splash screen */
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            color: #28a745;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        #splashScreen img {
+            width: 150px; /* Pas de grootte aan naar wens */
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        /* Animatie voor de drie puntjes */
+        .dots::after {
+            content: "";
+            display: inline-block;
+            animation: dots 1.5s infinite steps(3);
+        }
+
+        @keyframes dots {
+            0% { content: ""; }
+            33% { content: "."; }
+            66% { content: ".."; }
+            100% { content: "..."; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splashScreen">
+        <img src="{{ url_for('static', filename='images/icon.png') }}" alt="Logo"> 
+        <span class="dots">Welkom</span>
+    </div>
+
+    <script>
+        // Redirect naar de homepage na 3 seconden
+        setTimeout(function() {
+            window.location.href = "{{ url_for('home') }}"; // Verwijs naar de homepage
+        }, 3000); // 3000ms = 3 seconden
+    </script>
+</body>
+</html>
